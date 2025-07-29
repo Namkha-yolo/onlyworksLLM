@@ -159,7 +159,12 @@ const ProgressTracker = () => {
       setScreenshots(prev => [...prev, newScreenshot]);
       
       if (isApiKeySet) {
-        await analyzeScreenshotWithAI(newScreenshot);
+        // Only analyze if we have proper API setup
+        if (useServerKey || (apiKey && apiKey.trim().startsWith('sk-'))) {
+          await analyzeScreenshotWithAI(newScreenshot);
+        } else {
+          console.warn('No valid API key available for analysis');
+        }
       }
         
     } catch (error) {
@@ -410,6 +415,12 @@ const ProgressTracker = () => {
   const toggleRecording = async () => {
     if (!isApiKeySet) {
       alert('Please set your OpenAI API key first');
+      return;
+    }
+
+    // Additional validation for direct API calls
+    if (!useServerKey && (!apiKey || !apiKey.trim().startsWith('sk-'))) {
+      alert('Please enter a valid OpenAI API key or use the server key option');
       return;
     }
 
