@@ -8,6 +8,7 @@ const ProgressTracker = () => {
   const [currentGoal, setCurrentGoal] = useState('Complete project documentation');
   const [apiKey, setApiKey] = useState('');
   const [isApiKeySet, setIsApiKeySet] = useState(false);
+  const [useServerKey, setUseServerKey] = useState(false);
   const [progressData, setProgressData] = useState({
     todayProgress: 0,
     weeklyProgress: 0,
@@ -512,9 +513,15 @@ const ProgressTracker = () => {
   const handleApiKeySubmit = () => {
     if (apiKey.trim().startsWith('sk-')) {
       setIsApiKeySet(true);
+      setUseServerKey(false);
     } else {
       alert('Please enter a valid OpenAI API key (starts with sk-)');
     }
+  };
+
+  const useServerApiKey = () => {
+    setIsApiKeySet(true);
+    setUseServerKey(true);
   };
 
   const formatTime = (seconds) => {
@@ -587,7 +594,27 @@ const ProgressTracker = () => {
                   <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
                   <span className="relative flex items-center justify-center gap-2">
                     <Sparkles className="w-5 h-5" />
-                    Launch AI Analysis
+                    Use My API Key
+                  </span>
+                </button>
+
+                <div className="relative">
+                  <div className="absolute inset-0 flex items-center">
+                    <div className="w-full border-t border-white/20"></div>
+                  </div>
+                  <div className="relative flex justify-center text-sm">
+                    <span className="px-2 bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 text-gray-400">or</span>
+                  </div>
+                </div>
+
+                <button
+                  onClick={useServerApiKey}
+                  className="w-full bg-gradient-to-r from-emerald-600 to-teal-600 text-white font-bold py-4 px-6 rounded-xl hover:from-emerald-700 hover:to-teal-700 transform hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-emerald-500/25 relative overflow-hidden group"
+                >
+                  <div className="absolute inset-0 bg-gradient-to-r from-white/0 via-white/20 to-white/0 translate-x-[-100%] group-hover:translate-x-[100%] transition-transform duration-1000"></div>
+                  <span className="relative flex items-center justify-center gap-2">
+                    <Zap className="w-5 h-5" />
+                    Use Free Server Key
                   </span>
                 </button>
               </div>
@@ -705,17 +732,20 @@ const ProgressTracker = () => {
                     <div className="bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/30 rounded-2xl p-6 text-center backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
                       <Mouse className="w-8 h-8 text-blue-400 mx-auto mb-3" />
                       <div className="text-3xl font-bold text-white mb-1">{captureStats.clicks}</div>
-                      <div className="text-blue-200 text-sm font-medium">Total Clicks</div>
+                      <div className="text-blue-200 text-sm font-medium">App Clicks</div>
+                      <div className="text-blue-200 text-xs mt-1">+ Screen captures</div>
                     </div>
                     <div className="bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/30 rounded-2xl p-6 text-center backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
                       <Key className="w-8 h-8 text-green-400 mx-auto mb-3" />
                       <div className="text-3xl font-bold text-white mb-1">{captureStats.keystrokes}</div>
-                      <div className="text-green-200 text-sm font-medium">Keystrokes ({Math.floor(captureStats.keystrokes / 20)} captures)</div>
+                      <div className="text-green-200 text-sm font-medium">App Keystrokes</div>
+                      <div className="text-green-200 text-xs mt-1">+ Periodic captures</div>
                     </div>
                     <div className="bg-gradient-to-br from-purple-500/20 to-purple-600/20 border border-purple-500/30 rounded-2xl p-6 text-center backdrop-blur-sm transform hover:scale-105 transition-all duration-300">
                       <Monitor className="w-8 h-8 text-purple-400 mx-auto mb-3" />
                       <div className="text-3xl font-bold text-white mb-1">{captureStats.windowChanges}</div>
-                      <div className="text-purple-200 text-sm font-medium">Window Changes</div>
+                      <div className="text-purple-200 text-sm font-medium">Focus Changes</div>
+                      <div className="text-purple-200 text-xs mt-1">+ Tab switches</div>
                     </div>
                   </div>
                 )}
